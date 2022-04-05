@@ -1,12 +1,15 @@
 package com.nowcoder.community.controller;
 
+import com.nowcoder.community.util.CommunityUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,13 +23,14 @@ public class AlphaController {
     public String sayHolle() {
         return "Hello Spring Boot.";
     }
+
     @RequestMapping("/http")
-    public void http(HttpServletRequest request, HttpServletResponse response){
+    public void http(HttpServletRequest request, HttpServletResponse response) {
         //获取请求数据
         System.out.println(request.getMethod());
         System.out.println(request.getServletPath());
         Enumeration<String> headerNames = request.getHeaderNames();
-        while(headerNames.hasMoreElements()) {
+        while (headerNames.hasMoreElements()) {
             String element = headerNames.nextElement();
             String name = request.getHeader(element);
             System.out.println(element + ":" + name);
@@ -37,7 +41,7 @@ public class AlphaController {
         response.setContentType("text/html;charset=utf-8");
         try (
                 PrintWriter writer = response.getWriter();
-        ){
+        ) {
             writer.write("<h1>牛客网</h1>");
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,10 +60,11 @@ public class AlphaController {
         System.out.println(limit);
         return "some students";
     }
+
     // /student/123
     @RequestMapping(path = "/student/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public String getStudent(@PathVariable("id")int id) {
+    public String getStudent(@PathVariable("id") int id) {
         System.out.println(id);
         return "a student";
     }
@@ -67,11 +72,12 @@ public class AlphaController {
     //POST请求
     @RequestMapping(path = "/student", method = RequestMethod.POST)
     @ResponseBody
-    public String saveStudent(String name, int age){
+    public String saveStudent(String name, int age) {
         System.out.println(name);
         System.out.println(age);
         return "success";
     }
+
     //响应HTML数据
     @RequestMapping(path = "/teacher", method = RequestMethod.GET)
     public ModelAndView getTeacher() {
@@ -100,6 +106,7 @@ public class AlphaController {
         emp.put("salary", 8000.00);
         return emp;
     }
+
     @RequestMapping(path = "emps", method = RequestMethod.GET)
     @ResponseBody
     public List<Map<String, Object>> getEmps() {
@@ -122,5 +129,43 @@ public class AlphaController {
         emp.put("salary", 8000.00);
         emps.add(emp);
         return emps;
+    }
+
+    //cookie实例
+    @RequestMapping(value = "/cookie/set", method = RequestMethod.GET)
+    @ResponseBody
+    public String setCookie(HttpServletResponse response) {
+        //创建cookie
+        Cookie cookie = new Cookie("code", CommunityUtil.generateUUID());
+        //设置cookie得有效范围
+        cookie.setPath("/community/alpha");
+        //设置cookie得生存时间
+        cookie.setMaxAge(60 * 10);
+        //发送cookie
+        response.addCookie(cookie);
+        return "set cookie";
+    }
+
+    @RequestMapping(value = "/cookie/get", method = RequestMethod.GET)
+    @ResponseBody
+    public String getCookie(@CookieValue("code") String code) {
+        System.out.println(code);
+        return "get cookie";
+    }
+
+    //session示例
+    @RequestMapping(value = "/session/set", method = RequestMethod.GET)
+    @ResponseBody
+    public String setSession(HttpSession session) {
+        session.setAttribute("id", 1);
+        session.setAttribute("name", "test");
+        return "set session";
+    }
+    @RequestMapping(value = "/session/get", method = RequestMethod.GET)
+    @ResponseBody
+    public String getSession(HttpSession session) {
+        System.out.println(session.getAttribute("id"));
+        System.out.println(session.getAttribute("name"));
+        return "get session";
     }
 }

@@ -4,7 +4,7 @@ import com.nowcoder.community.entity.DiscussPost;
 import com.nowcoder.community.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
+//mapper.xml方式写sql
 import java.util.List;
 @Mapper
 public interface DiscussPostMapper {
