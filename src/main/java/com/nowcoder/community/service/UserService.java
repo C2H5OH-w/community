@@ -26,9 +26,6 @@ public class UserService implements CommunityConstant {
     private UserMapper userMapper;
 
     @Autowired
-    private LoginTicketMapper loginTicketMapper;
-
-    @Autowired
     private MailClient mailClient;
 
     @Autowired
@@ -39,6 +36,9 @@ public class UserService implements CommunityConstant {
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
     public User findUserById(int id) {
         return userMapper.selectById(id);
@@ -153,5 +153,34 @@ public class UserService implements CommunityConstant {
 
     public LoginTicket findLoginTicket(String ticket) {
         return loginTicketMapper.selectLoginTicket(ticket);
+    }
+
+    public int updateHeader(int userId, String headerUrl) {
+        return userMapper.updateHeader(userId, headerUrl);
+    }
+
+    public Map<String, Object> changePassword(int userId, String oldPassword, String newPassword, String confirmPassword) {
+        Map<String, Object> map = new HashMap<>();
+        if(StringUtils.isBlank(oldPassword)) {
+            map.put("oldPasswordMsg", "密码不能为空");
+            return map;
+        }
+        if(StringUtils.isBlank(newPassword)) {
+            map.put("newPasswordMsg", "密码不能为空");
+            return map;
+        }
+        User user = userMapper.selectById(userId);
+        oldPassword = CommunityUtil.md5(oldPassword + user.getSalt());
+        if(!user.getPassword().equals(oldPassword)) {
+            map.put("oldPasswordMsg", "密码错误");
+            return map;
+        }
+        if(!confirmPassword.equals(newPassword)) {
+            map.put("confirmPasswordMsg", "密码不一致");
+            return map;
+        }
+        newPassword = CommunityUtil.md5(newPassword + user.getSalt());
+        userMapper.updatePassword(userId, newPassword);
+        return map;
     }
 }

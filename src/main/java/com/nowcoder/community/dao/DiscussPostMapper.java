@@ -12,5 +12,9 @@ public interface DiscussPostMapper {
 
     //@Param注解用于对参数取别名
     //在thyeleaf的<if>语句中如果参数只有一个，必须使用别名
-    int selectDiscussRows(@Param("userId") int userId);
+    int selectDiscussPostRows(@Param("userId") int userId);
+
+    int insertDiscussPost(DiscussPost discussPost);
+
+    DiscussPost selectDiscussPostById(int id);
 }

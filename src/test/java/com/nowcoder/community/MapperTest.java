@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
 import java.util.List;
@@ -67,7 +68,7 @@ public class MapperTest {
     public void testPost() {
         List<DiscussPost> posts = discussPostMapper.selectDiscussPosts(149, 0, 10);
         posts.forEach(System.out::println);
-        int rows = discussPostMapper.selectDiscussRows(149);
+        int rows = discussPostMapper.selectDiscussPostRows(149);
         System.out.println(rows);
     }
 

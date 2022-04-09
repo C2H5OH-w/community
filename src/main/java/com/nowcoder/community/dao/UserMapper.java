@@ -2,6 +2,7 @@ package com.nowcoder.community.dao;
 
 import com.nowcoder.community.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+
 //mapper.xml方式写sql
 @Mapper
 public interface UserMapper {
