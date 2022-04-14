@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 //注解方式写sql
 @Mapper
+@Deprecated
 public interface LoginTicketMapper {
 
     @Insert({
